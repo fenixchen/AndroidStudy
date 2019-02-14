@@ -1,0 +1,35 @@
+Here are some sample expressions you may use to test your interpreter. 
+You can use the real Lisp interpreter to see what the correct answer is for each if you are not sure.  
+Run the following tests on your interpreter and attach screenshots (running on openlab) as report.
+                        (my-top) ; to get your my-eval evaluating top-level expressions
+                        t
+                        nil
+                        "Hello"
+                        10
+                        '(a b c)
+                        (car '(a b c))
+                        (cdr '(a b c))
+                        (cons 'd '(a b c))
+                        (eq 'a 'a)
+                        (eq '(a b) '(a b)) ; should be nil
+                        (eq t t)
+                        (eq nil nil)
+                        (eq t nil)
+    		           (setq a '(a b c))
+   		           a
+		           (defun rev (L A) (cond ((null L) A) (t (rev (cdr L) (cons (car L) A)))))
+                                     (rev  '(A B C D E) nil)
+                                     (rev a nil)
+									 
+									 
+(setq nnn '(0 0 0))\n
+(setq yyy '(1 1 1))\n
+(defun hello (A B) (cond ((null A) nnn) (t yyy)))\n
+(hello 'AAA 'BBB)\n
+(hello nil 'CCC)\n									 
+
+
+(defun rev (L A) (cond ((null L) A) (t (rev (cdr L) (cons (car L) A)))))\n
+(setq a '(a))\n
+a\n
+(rev  '(A B) nil)\n
