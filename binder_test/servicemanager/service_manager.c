@@ -17,8 +17,7 @@
 #define ALOGI(x...) fprintf(stderr, "svcmgr: " x)
 #define ALOGE(x...) fprintf(stderr, "svcmgr: " x)
 
-const char *str8(const uint16_t *x, size_t x_len)
-{
+const char *str8(const uint16_t *x, size_t x_len) {
     static char buf[128];
     size_t max = 127;
     char *p = buf;
@@ -37,8 +36,7 @@ const char *str8(const uint16_t *x, size_t x_len)
     return buf;
 }
 
-int str16eq(const uint16_t *a, const char *b)
-{
+int str16eq(const uint16_t *a, const char *b) {
     while (*a && *b)
         if (*a++ != *b++) return 0;
     if (*a || *b)
@@ -50,8 +48,7 @@ static int selinux_enabled;
 // static char *service_manager_context;
 // static struct selabel_handle* sehandle;
 
-static bool check_mac_perms(pid_t spid, const char *tctx, const char *perm, const char *name)
-{
+static bool check_mac_perms(pid_t spid, const char *tctx, const char *perm, const char *name) {
     // char *sctx = NULL;
     // const char *class = "service_manager";
     // bool allowed;
@@ -70,8 +67,7 @@ static bool check_mac_perms(pid_t spid, const char *tctx, const char *perm, cons
     return true;
 }
 
-static bool check_mac_perms_from_getcon(pid_t spid, const char *perm)
-{
+static bool check_mac_perms_from_getcon(pid_t spid, const char *perm) {
     // if (selinux_enabled <= 0) {
     //     return true;
     // }
@@ -81,8 +77,7 @@ static bool check_mac_perms_from_getcon(pid_t spid, const char *perm)
     return true;
 }
 
-static bool check_mac_perms_from_lookup(pid_t spid, const char *perm, const char *name)
-{
+static bool check_mac_perms_from_lookup(pid_t spid, const char *perm, const char *name) {
     // bool allowed;
     // char *tctx = NULL;
 
@@ -107,26 +102,22 @@ static bool check_mac_perms_from_lookup(pid_t spid, const char *perm, const char
     return true;
 }
 
-static int svc_can_register(const uint16_t *name, size_t name_len, pid_t spid)
-{
+static int svc_can_register(const uint16_t *name, size_t name_len, pid_t spid) {
     const char *perm = "add";
     return check_mac_perms_from_lookup(spid, perm, str8(name, name_len)) ? 1 : 0;
 }
 
-static int svc_can_list(pid_t spid)
-{
+static int svc_can_list(pid_t spid) {
     const char *perm = "list";
     return check_mac_perms_from_getcon(spid, perm) ? 1 : 0;
 }
 
-static int svc_can_find(const uint16_t *name, size_t name_len, pid_t spid)
-{
+static int svc_can_find(const uint16_t *name, size_t name_len, pid_t spid) {
     const char *perm = "find";
     return check_mac_perms_from_lookup(spid, perm, str8(name, name_len)) ? 1 : 0;
 }
 
-struct svcinfo
-{
+struct svcinfo {
     struct svcinfo *next;
     uint32_t handle;
     struct binder_death death;
@@ -137,8 +128,7 @@ struct svcinfo
 
 struct svcinfo *svclist = NULL;
 
-struct svcinfo *find_svc(const uint16_t *s16, size_t len)
-{
+struct svcinfo *find_svc(const uint16_t *s16, size_t len) {
     struct svcinfo *si;
 
     for (si = svclist; si; si = si->next) {
@@ -150,9 +140,8 @@ struct svcinfo *find_svc(const uint16_t *s16, size_t len)
     return NULL;
 }
 
-void svcinfo_death(struct binder_state *bs, void *ptr)
-{
-    struct svcinfo *si = (struct svcinfo* ) ptr;
+void svcinfo_death(struct binder_state *bs, void *ptr) {
+    struct svcinfo *si = (struct svcinfo *)ptr;
 
     ALOGI("service '%s' died\n", str8(si->name, si->len));
     if (si->handle) {
@@ -162,13 +151,10 @@ void svcinfo_death(struct binder_state *bs, void *ptr)
 }
 
 uint16_t svcmgr_id[] = {
-    'a','n','d','r','o','i','d','.','o','s','.',
-    'I','S','e','r','v','i','c','e','M','a','n','a','g','e','r'
-};
+    'a', 'n', 'd', 'r', 'o', 'i', 'd', '.', 'o', 's', '.',
+    'I', 'S', 'e', 'r', 'v', 'i', 'c', 'e', 'M', 'a', 'n', 'a', 'g', 'e', 'r'};
 
-
-uint32_t do_find_service(struct binder_state *bs, const uint16_t *s, size_t len, uid_t uid, pid_t spid)
-{
+uint32_t do_find_service(struct binder_state *bs, const uint16_t *s, size_t len, uid_t uid, pid_t spid) {
     struct svcinfo *si = find_svc(s, len);
 
     if (!si || !si->handle) {
@@ -194,8 +180,7 @@ uint32_t do_find_service(struct binder_state *bs, const uint16_t *s, size_t len,
 int do_add_service(struct binder_state *bs,
                    const uint16_t *s, size_t len,
                    uint32_t handle, uid_t uid, int allow_isolated,
-                   pid_t spid)
-{
+                   pid_t spid) {
     struct svcinfo *si;
 
     //ALOGI("add_service('%s',%x,%s) uid=%d\n", str8(s, len), handle,
@@ -206,7 +191,7 @@ int do_add_service(struct binder_state *bs,
 
     if (!svc_can_register(s, len, spid)) {
         ALOGE("add_service('%s',%x) uid=%d - PERMISSION DENIED\n",
-             str8(s, len), handle, uid);
+              str8(s, len), handle, uid);
         return -1;
     }
 
@@ -214,7 +199,7 @@ int do_add_service(struct binder_state *bs,
     if (si) {
         if (si->handle) {
             ALOGE("add_service('%s',%x) uid=%d - ALREADY REGISTERED, OVERRIDE\n",
-                 str8(s, len), handle, uid);
+                  str8(s, len), handle, uid);
             svcinfo_death(bs, si);
         }
         si->handle = handle;
@@ -222,14 +207,14 @@ int do_add_service(struct binder_state *bs,
         si = malloc(sizeof(*si) + (len + 1) * sizeof(uint16_t));
         if (!si) {
             ALOGE("add_service('%s',%x) uid=%d - OUT OF MEMORY\n",
-                 str8(s, len), handle, uid);
+                  str8(s, len), handle, uid);
             return -1;
         }
         si->handle = handle;
         si->len = len;
         memcpy(si->name, s, (len + 1) * sizeof(uint16_t));
         si->name[len] = '\0';
-        si->death.func = (void*) svcinfo_death;
+        si->death.func = (void *)svcinfo_death;
         si->death.ptr = si;
         si->allow_isolated = allow_isolated;
         si->next = svclist;
@@ -244,8 +229,7 @@ int do_add_service(struct binder_state *bs,
 int svcmgr_handler(struct binder_state *bs,
                    struct binder_transaction_data *txn,
                    struct binder_io *msg,
-                   struct binder_io *reply)
-{
+                   struct binder_io *reply) {
     struct svcinfo *si;
     uint16_t *s;
     size_t len;
@@ -274,7 +258,7 @@ int svcmgr_handler(struct binder_state *bs,
 
     if ((len != (sizeof(svcmgr_id) / 2)) ||
         memcmp(svcmgr_id, s, sizeof(svcmgr_id))) {
-        fprintf(stderr,"invalid id %s\n", str8(s, len));
+        fprintf(stderr, "invalid id %s\n", str8(s, len));
         return -1;
     }
 
@@ -286,57 +270,58 @@ int svcmgr_handler(struct binder_state *bs,
     //     }
     // }
 
-    switch(txn->code) {
-    case SVC_MGR_GET_SERVICE:
-    case SVC_MGR_CHECK_SERVICE:
-        s = bio_get_string16(msg, &len);
-        if (s == NULL) {
-            return -1;
-        }
-        handle = do_find_service(bs, s, len, txn->sender_euid, txn->sender_pid);
-        if (!handle)
-            break;
-        bio_put_ref(reply, handle);
-        return 0;
-
-    case SVC_MGR_ADD_SERVICE:
-        s = bio_get_string16(msg, &len);
-        if (s == NULL) {
-            return -1;
-        }
-        handle = bio_get_ref(msg);
-        allow_isolated = bio_get_uint32(msg) ? 1 : 0;
-        if (do_add_service(bs, s, len, handle, txn->sender_euid,
-            allow_isolated, txn->sender_pid))
-            return -1;
-        break;
-
-    case SVC_MGR_LIST_SERVICES: {
-        uint32_t n = bio_get_uint32(msg);
-
-        if (!svc_can_list(txn->sender_pid)) {
-            ALOGE("list_service() uid=%d - PERMISSION DENIED\n",
-                    txn->sender_euid);
-            return -1;
-        }
-        si = svclist;
-        while ((n-- > 0) && si)
-            si = si->next;
-        if (si) {
-            bio_put_string16(reply, si->name);
+    switch (txn->code) {
+        case SVC_MGR_GET_SERVICE:
+        case SVC_MGR_CHECK_SERVICE:
+            s = bio_get_string16(msg, &len);
+            if (s == NULL) {
+                return -1;
+            }
+            handle = do_find_service(bs, s, len, txn->sender_euid, txn->sender_pid);
+            if (!handle)
+                break;
+            bio_put_ref(reply, handle);
             return 0;
+
+        case SVC_MGR_ADD_SERVICE:
+            s = bio_get_string16(msg, &len);
+            if (s == NULL) {
+                return -1;
+            }
+            handle = bio_get_ref(msg);
+            allow_isolated = bio_get_uint32(msg) ? 1 : 0;
+            if (do_add_service(bs, s, len, handle, txn->sender_euid,
+                               allow_isolated, txn->sender_pid))
+                return -1;
+            else
+                ALOGI("service '%s' added\n", str8(s, len));
+            break;
+
+        case SVC_MGR_LIST_SERVICES: {
+            uint32_t n = bio_get_uint32(msg);
+
+            if (!svc_can_list(txn->sender_pid)) {
+                ALOGE("list_service() uid=%d - PERMISSION DENIED\n",
+                      txn->sender_euid);
+                return -1;
+            }
+            si = svclist;
+            while ((n-- > 0) && si)
+                si = si->next;
+            if (si) {
+                bio_put_string16(reply, si->name);
+                return 0;
+            }
+            return -1;
         }
-        return -1;
-    }
-    default:
-        ALOGE("unknown code %d\n", txn->code);
-        return -1;
+        default:
+            ALOGE("unknown code %d\n", txn->code);
+            return -1;
     }
 
     bio_put_uint32(reply, 0);
     return 0;
 }
-
 
 // static int audit_callback(void *data, security_class_t cls, char *buf, size_t len)
 // {
@@ -344,11 +329,10 @@ int svcmgr_handler(struct binder_state *bs,
 //     return 0;
 // }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     struct binder_state *bs;
 
-    bs = binder_open(128*1024);
+    bs = binder_open(128 * 1024);
     if (!bs) {
         ALOGE("failed to open binder driver\n");
         return -1;

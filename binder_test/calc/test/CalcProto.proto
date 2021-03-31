@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package test;
+
+message CalcCommandProto {
+    enum Type{
+        ADD = 0;
+        SUB = 1;
+        MUL = 2;
+    }
+    string command_name = 1;
+    Type op_type = 2;
+    int32 var1 = 3;
+    int32 var2 = 4;
+    repeated int32 var_more = 5;
+}
+
+message CalcResultProto {
+    int32 result = 1;
+}
+
+

@@ -10,6 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_library(ProtobufShared protobuf)
 
+add_subdirectory(calc)
 add_subdirectory(spwp)
 add_subdirectory(binder_ctrl)
 add_subdirectory(libs)
