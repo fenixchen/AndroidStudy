@@ -1226,9 +1226,13 @@ const char16_t *Parcel::readString16Inplace(size_t *outLen) const {
   return NULL;
 }
 
-status_t Parcel::readStrongBinder(sp<android::IBinder> &val) const {
-  unflatten_binder(ProcessState::self(), *this, &val);
-  if (!val.get()) {
+status_t Parcel::readStrongBinder(sp<IInterface> *val) const{
+  return NO_ERROR;
+}
+
+status_t Parcel::readStrongBinder(sp<IBinder> *val) const {
+  unflatten_binder(ProcessState::self(), *this, val);
+  if (!val->get()) {
     return UNEXPECTED_NULL;
   }
   return 0;

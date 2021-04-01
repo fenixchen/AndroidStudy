@@ -13,7 +13,7 @@ interface ICalcService{
     Rectangle getRect();
     int add(int a, int b, int c);
     void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat,
-            double aDouble, String aString);
-    void addAsync(int a, int b, int c, ICalcCallback callback);
-    void InvokeCommand(in CalcCommand command, out CalcResult result);
+            double aDouble, String aString);            
+    oneway void addAsync(int a, int b, int c, ICalcCallback callback);
+    void InvokeCommand(in CalcCommand command, out CalcResult result);    
 }

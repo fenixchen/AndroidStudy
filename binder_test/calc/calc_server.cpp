@@ -21,6 +21,7 @@ using namespace android;
 using namespace test;
 
 class MyCalcService : public BnCalcService {
+  ::android::sp<::test::ICalcCallback> m_callback;
  public:
   virtual ~MyCalcService() {}
   ::android::binder::Status getRect(::test::Rectangle *_aidl_return) {
@@ -47,8 +48,13 @@ class MyCalcService : public BnCalcService {
   virtual ::android::binder::Status addAsync(
       int32_t a, int32_t b, int32_t c,
       const ::android::sp<::test::ICalcCallback> &callback) {
-    if (callback.get()) {
-      callback->done(a + b + c);
+        printf("before sleep\n");        
+    for (int i = 0; i < 10; i ++){
+      sleep(2);
+    if (callback.get()) {      
+      printf("async call\n");
+      callback->done(a + b + c + i);    
+    }
     }
     return ::android::binder::Status::ok();
   }

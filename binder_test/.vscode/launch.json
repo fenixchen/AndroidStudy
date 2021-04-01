@@ -26,6 +26,27 @@
             "miDebuggerPath": "/usr/bin/gdb"
         },
         {
+            "name": "calc_server",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/calc/calc_server",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/build/calc",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "make",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
+        {
             "name": "test_server",
             "type": "cppdbg",
             "request": "launch",
@@ -45,6 +66,27 @@
             ],
             "preLaunchTask": "make",
             "miDebuggerPath": "/usr/bin/gdb"
-        }
+        },
+        {
+            "name": "spwp",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/spwp/spwp",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/build/spwp",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "make spwp",
+            "miDebuggerPath": "/usr/bin/gdb"
+        },
     ]
 }

@@ -180,7 +180,8 @@ class Parcel {
   String16 readString16() const;
   status_t readString16(String16 *pArg) const;
   const char16_t *readString16Inplace(size_t *outLen) const;
-  status_t readStrongBinder(sp<IBinder> &val) const;
+  status_t readStrongBinder(sp<IBinder> *val) const;
+  status_t readStrongBinder(sp<IInterface> *val) const;
   sp<IBinder> readStrongBinder() const;
   wp<IBinder> readWeakBinder() const;
   status_t readBool(bool *pArg) const;

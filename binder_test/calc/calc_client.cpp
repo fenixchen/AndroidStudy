@@ -30,6 +30,8 @@ int main() {
   sp<IBinder> binder = sm->getService(String16("test.ICalcService"));
   sp<test::ICalcService> service = interface_cast<test::ICalcService>(binder);
 
+  
+
   printf("CONST_C:%d\n", (int)test::ICalcService::CONST_C);
 
   int32_t ret = 0;
@@ -38,8 +40,8 @@ int main() {
 
   service->basicTypes(1, 2, true, 1.0, 2.0, String16("你好"));
 
-  MyCalcCallback callback;
-  service->addAsync(2, 4, 6, &callback);
+  sp<MyCalcCallback> callback = new MyCalcCallback();
+  service->addAsync(2, 4, 6, callback);
 
   Rectangle rect;
   service->getRect(&rect);
@@ -57,6 +59,11 @@ int main() {
   CalcResult result;
   service->InvokeCommand(command, &result);
   printf("InvokeCommand Result:%d\n", result.result.result());
+  
+
+  android::ProcessState::self()->startThreadPool();
+  IPCThreadState::self()->joinThreadPool();
+
 
   return 0;
 }
