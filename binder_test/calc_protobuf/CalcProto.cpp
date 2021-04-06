@@ -6,6 +6,7 @@
 #include <binder/Parcelable.h>
 #include <binder/Status.h>
 #include <test/CalcProto.h>
+#include <test/CalcProto.pb.h>
 #include <utils/String16.h>
 #include <utils/StrongPointer.h>
 
@@ -17,27 +18,29 @@ namespace test {
 
 status_t CalcCommand::writeToParcel(android::Parcel* parcel) const {
   status_t res = 0;
-  res = parcel->writeInt32(this->op);
-  res = parcel->writeString8(this->op_name);
-  res = parcel->writeInt32Vector(this->vars);
+  std::string str;
+  command.SerializeToString(&str);
+  res = parcel->writeCString(str.c_str());
   return res;
 }
 status_t CalcCommand::readFromParcel(const android::Parcel* parcel) {
   status_t res = 0;
-  this->op = (CalcCommand::Op)parcel->readInt32();
-  this->op_name = parcel->readString8();
-  res = parcel->readInt32Vector(&this->vars);
+  const char* r = parcel->readCString();
+  command.ParseFromString(r);
   return res;
 }
 
 status_t CalcResult::writeToParcel(android::Parcel* parcel) const {
   status_t res = 0;
-  res = parcel->writeInt32(this->result);
+  std::string str;
+  result.SerializeToString(&str);
+  res = parcel->writeCString(str.c_str());
   return res;
 }
 status_t CalcResult::readFromParcel(const android::Parcel* parcel) {
   status_t res = 0;
-  this->result = parcel->readInt32();
+  const char* r = parcel->readCString();
+  result.ParseFromString(r);
   return res;
 }
 

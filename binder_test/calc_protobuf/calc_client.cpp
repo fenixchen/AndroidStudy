@@ -9,6 +9,7 @@
 #include <utils/RefBase.h>
 
 #include "test/BnCalcCallback.h"
+#include "test/CalcProto.pb.h"
 #include "test/ICalcCallback.h"
 #include "test/ICalcService.h"
 
@@ -47,15 +48,18 @@ int main() {
   printf("Rect(x=%d, y=%d, w=%d, h=%d)\n", rect.x, rect.y, rect.w, rect.h);
 
   CalcCommand command;
-  CalcResult result;  
-  command.op = CalcCommand::ADD;
-  command.op_name = "Do Add";
-  command.vars.push_back(100);
-  command.vars.push_back(200);
-  command.vars.push_back(300);
-  command.vars.push_back(400);
+  CalcCommandProto &cmd = command.command;
+  cmd.set_op_type(CalcCommandProto_Type::CalcCommandProto_Type_ADD);
+  cmd.set_command_name("Hello command\n");
+  cmd.set_var1(100);
+  cmd.set_var2(200);
+  cmd.add_var_more(300);
+  cmd.add_var_more(400);
+
+  CalcResult result;
   service->InvokeCommand(command, &result);
-  printf("InvokeCommand Result:%d\n", result.result);
+  printf("InvokeCommand Result:%d\n", result.result.result());
+  
 
   android::ProcessState::self()->startThreadPool();
   IPCThreadState::self()->joinThreadPool();

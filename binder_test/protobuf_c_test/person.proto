@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+
+enum Gender{
+  MALE = 0;
+  FAMALE = 1;
+};
+
+
+message Company{
+  string name = 1;
+  string address = 2;
+  uint32 salary = 3;
+}
+
+message Person {
+  string name = 1;
+  int32 id = 2;
+  string email = 3;
+  repeated int32 scores = 4;  
+  Gender gender = 5;
+  oneof contact{
+    string address = 6;
+    int32 phone = 7;
+  }
+  repeated Company companys = 8;
+}

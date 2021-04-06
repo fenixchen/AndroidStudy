@@ -66,12 +66,15 @@ class MyCalcService : public BnCalcService {
     return ::android::binder::Status::ok();
   }
   virtual ::android::binder::Status InvokeCommand(
-      const ::test::CalcCommand &command, ::test::CalcResult *result) {        
-    if (command.op == ::test::CalcCommand::ADD) {
-      result->result = 0;
-      for (auto it = command.vars.begin(); it != command.vars.end(); ++it){
-        result->result += *it;
+      const ::test::CalcCommand &command, ::test::CalcResult *result) {
+    const CalcCommandProto &cmd = command.command;
+    if (cmd.op_type() == CalcCommandProto::ADD) {
+      printf("Do command:%s\n", cmd.command_name().c_str());
+      int32_t sum = cmd.var1() + cmd.var2();
+      for (int i = 0; i < cmd.var_more_size(); i++) {
+        sum += cmd.var_more(i);
       }
+      result->result.set_result(sum);
     }
     return ::android::binder::Status::ok();
   }

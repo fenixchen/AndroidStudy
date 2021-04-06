@@ -5,29 +5,23 @@
 #include <binder/IInterface.h>
 #include <binder/Parcelable.h>
 #include <binder/Status.h>
-#include <utils/String8.h>
+#include <test/CalcProto.pb.h>
+#include <utils/String16.h>
 #include <utils/StrongPointer.h>
-#include <vector>
+
 #include <cstdint>
 
 namespace test {
 
-
 struct CalcCommand : public ::android::Parcelable {
-  enum Op{
-    ADD = 0,
-    SUB = 1,
-  };
-  Op op;
-  android::String8 op_name;
-  std::vector<int32_t> vars;
+  CalcCommandProto command;
   CalcCommand() {}
   virtual android::status_t writeToParcel(android::Parcel* parcel) const;
   virtual android::status_t readFromParcel(const android::Parcel* parcel);
 };
 
 struct CalcResult : public ::android::Parcelable {
-  int32_t result;
+  CalcResultProto result;
   CalcResult() {}
   virtual android::status_t writeToParcel(android::Parcel* parcel) const;
   virtual android::status_t readFromParcel(const android::Parcel* parcel);

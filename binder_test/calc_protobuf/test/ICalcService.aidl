@@ -15,5 +15,5 @@ interface ICalcService{
     void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat,
             double aDouble, String aString);            
     oneway void addAsync(int a, int b, int c, ICalcCallback callback);
-    void InvokeCommand(in CalcCommand command, out CalcResult result);
+    void InvokeCommand(in CalcCommand command, out CalcResult result);    
 }
